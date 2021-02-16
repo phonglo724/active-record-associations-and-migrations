@@ -53,21 +53,39 @@ In this walk-through, we'll be building out a domain model for our fictitious
 music playing app, Playlister. This app will catalog songs and their
 associated artists and genres.  
 
-We'll have three models: Artists, Songs, and Genres. By writing a few migrations
+We'll have three models: 
+X 1. Artists, 
+X 2. Songs, and 
+X 3. Genres. 
+By writing a few migrations
 and making use of the appropriate Active Record macros (more on that later), we
 will be able to:
 
-* ask an Artist about its songs and genres
-* ask a Song about its genre and its artist
-* ask a Genre about its songs and artists.
+* ask an Artist about its 
+X 1. songs and 
+X 2. genres
+
+* ask a Song about its 
+X 1. genre and its 
+X 2. artist
+
+* ask a Genre about its 
+X 1. songs and 
+X 2. artists.
 
 The relationships between artists, songs and genres will be enacted as follows:
 
-* Artists have many songs and a song belongs to an artist.
-* Artists have many genres through songs.
-* Songs belong to a genre.
-* A genre has many songs.
-* A genre has many artists through songs.
+* Artists 
+X    have many songs and 
+X    a song belongs to an artist.
+* Artists 
+X    have many genres through songs.
+* Songs 
+X    belong to a genre.
+* A genre 
+X    has many songs.
+* A genre 
+X    has many artists through songs.
 
 We will build these associations through the use of Active Record migrations and
 macros.
@@ -76,25 +94,30 @@ macros.
 
 ### The Song model
 
-A song will belong to an artist *and* belong to a genre. Before we worry about
-the migration that will implement this in our songs table, let's think about
+A song will 
+X  belong to an artist 
+X  *and* 
+X  belong to a genre. 
+Before we worry about the migration that will implement this in our songs table, let's think about
 what that table will look like:
 
 |id |name        |artist_id |genre_id |
 |---|------------|----------|---------|
 |2  |Shake It Off|1         |1        |
 
-We can see that the songs table will have an `artist_id` column and a `genre_id`
-column. We will give a given song an `artist_id` value of the artist it belongs
-to. The same goes for genre. These foreign keys, in conjunction with the
-Active Record association macros will allow our query to get an artist's songs or
-genres, a song's artist or genre, and a genre's songs and artists entirely
-through Active Record provided methods on our classes.
+We can see that the songs table will have 
+  1. an `artist_id` column 
+  2. and a `genre_id` column. 
+We will give a given song 
+  1. an `artist_id` value of the artist it belongs
+    to. 
+The same goes for genre. These foreign keys, in conjunction with the Active Record association macros will allow our query to get an artist's songs or
+genres, a song's artist or genre, and a genre's songs and artists entirely through Active Record provided methods on our classes.
 
 Let's write the migration that will make this happen.
 
-* Open a file, `db/migrate/03_create_songs.rb`
-* Write the following migration:
+X * Open a file, `db/migrate/03_create_songs.rb`
+X * Write the following migration:
 
 ```ruby
 class CreateSongs < ActiveRecord::Migration[4.2]
@@ -110,12 +133,18 @@ end
 
 ### The Artist Model
 
-An artist will have many songs and it will have many genres *through* songs.
+An artist will have 
+X  many songs and 
+X  it will have many genres 
+X  *through* 
+X  songs.
 These associations will be taken care of entirely through AR macros, which we'll
 get to in a bit. What do we mean by *through* songs? The table songs is the
-`JOIN` table! Remember that from previous labs? That means that songs has both
-an `artist_id` and a `genre_id` to combine those two tables together in a
-many-to-many relationship.
+`JOIN` table! Remember that from previous labs? 
+That means that songs has both
+X  1. an `artist_id` and 
+X  2. a `genre_id` 
+to combine those two tables together in a many-to-many relationship.
 
 Let's take a look at what our `artists` table will need to look like:
 
@@ -123,7 +152,8 @@ Let's take a look at what our `artists` table will need to look like:
 |---|-------------|
 |1  |Taylor Swift |
 
-Our artists table just needs a `name` column. Let's write the migration. In
+X Our artists table just needs a `name` column. 
+X Let's write the migration. In
 `db/migrate/01_create_artists.rb`:
 
 ```ruby
@@ -138,9 +168,10 @@ end
 
 ### The Genre Model
 
-A genre will have many songs and it will have many artists through songs. These
-associations will be taken care of entirely through AR macros, which we'll get
-to in a bit.
+A genre will 
+X  1. have many songs and it will 
+X  2. have many artists through songs. 
+These associations will be taken care of entirely through AR macros, which we'll get to in a bit.
 
 Let's take a look at what our genres table will need to look like:
 
@@ -148,7 +179,7 @@ Let's take a look at what our genres table will need to look like:
 |---|-----|
 |1  |pop  |
 
-Let's write our migration. In `db/migrate/02_create_genres.rb`:
+X Let's write our migration. In `db/migrate/02_create_genres.rb`:
 
 ```ruby
 class CreateGenres < ActiveRecord::Migration[4.2]
@@ -160,8 +191,10 @@ class CreateGenres < ActiveRecord::Migration[4.2]
 end
 ```
 
-Great! Now go ahead and run `rake db:migrate` in your terminal to execute our
-table creations.
+Great! 
+
+Now go ahead and run 
+ X `rake db:migrate` in your terminal to execute our table creations.
 
 ## Building our Associations using AR Macros
 
@@ -185,8 +218,9 @@ Let's get started.
 
 ### A Song Belongs to an Artist and A Genre
 
-Create a file, `app/models/song.rb`. Define your `Song` class to inherit from
-`ActiveRecord::Base`. This is very important! If we don't inherit from Active
+X Create a file, `app/models/song.rb`. 
+X Define your `Song` class to inherit from `ActiveRecord::Base`. 
+This is very important! If we don't inherit from Active
 Record Base, we won't get our fancy macro methods.
 
 ```ruby
@@ -195,8 +229,8 @@ class Song < ActiveRecord::Base
 end
 ```
 
-We need to tell the `Song` class that it will produce objects that can belong to
-an artist. We will do it with the `belongs_to` macro:
+We need to tell the `Song` class that it will produce objects that can belong to an artist. 
+X We will do it with the `belongs_to` macro:
 
 ```ruby
 class Song < ActiveRecord::Base
@@ -204,8 +238,7 @@ class Song < ActiveRecord::Base
 end
 ```
 
-Songs also belong to a genre, so we'll use the same macro to implement that
-relationship:
+X Songs also belong to a genre, so we'll use the same macro to implement that relationship:
 
 ```ruby
 class Song < ActiveRecord::Base
@@ -216,8 +249,8 @@ end
 
 ### An Artist Has Many Songs
 
-Create a file, `app/models/artist.rb`. Define your `Artist` class to inherit
-from `ActiveRecord::Base`:
+X Create a file, `app/models/artist.rb`. 
+X Define your `Artist` class to inherit from `ActiveRecord::Base`:
 
 ```ruby
 class Artist < ActiveRecord::Base
@@ -226,7 +259,7 @@ end
 ```
 
 We need to tell the `Artist` class that each artist object can have many songs.
-We will use the `has_many` macro to do it.
+X We will use the `has_many` macro to do it.
 
 ```ruby
 class Artist < ActiveRecord::Base
@@ -235,11 +268,9 @@ class Artist < ActiveRecord::Base
 end
 ```
 
-And that's it! Now, because our songs table has an `artist_id` column and
-because our `Artist` class uses the `has_many` macro, an artist has many songs!
+And that's it! Now, because our songs table has an `artist_id` column and because our `Artist` class uses the `has_many` macro, an artist has many songs!
 
-It is also true that an artist has many genres through songs. We will use the
-`has_many through` macro to implement this:
+It is also true that an artist has many genres through songs. X We will use the `has_many through` macro to implement this:
 
 ```ruby
 class Artist < ActiveRecord::Base
@@ -250,8 +281,8 @@ end
 
 ### Genres Have Many Songs and Have Many Artists
 
-Create a file `app/models/genre.rb`. In it, define a class, `Genre`, to inherit
-from `ActiveRecord::Base`.
+X Create a file `app/models/genre.rb`. 
+X In it, define a class, `Genre`, to inherit from `ActiveRecord::Base`.
 
 ```ruby
 class Genre < ActiveRecord::Base
@@ -259,7 +290,8 @@ class Genre < ActiveRecord::Base
 end
 ```
 
-A genre can have many songs. Let's implement that with the `has_many` macro:
+A genre can have many songs. 
+X Let's implement that with the `has_many` macro:
 
 ```ruby
 class Genre < ActiveRecord::Base
@@ -267,8 +299,8 @@ class Genre < ActiveRecord::Base
 end
 ```
 
-A genre also has many artists through its songs. Let's implement this
-relationship with the `has_many through` macro:
+A genre also has many artists through its songs. 
+X Let's implement this relationship with the `has_many through` macro:
 
 ```ruby
 class Genre < ActiveRecord::Base
@@ -277,105 +309,92 @@ class Genre < ActiveRecord::Base
 end
 ```
 
-And that's it! The tests in this lesson are in place to ensure you've properly
-set up these associations. You can go ahead and run `learn test` now to see if you
+And that's it! The tests in this lesson are in place to ensure you've properly set up these associations. 
+
+X You can go ahead and run `learn test` now to see if you
 pass them all before continuing.
 
 ## Our Code in Action: Working with Associations
 
-Go ahead and run the test suite and you'll see that we are passing all of our
-tests! Amazing! Our associations are all working, just because of our migrations
-and use of macros.
+Go ahead and run the test suite and you'll see that we are passing all of our tests! Amazing! Our associations are all working, just because of our migrations and use of macros.
 
 Let's play around with our code.
 
-In your console, run `rake console`. Now we are in a Pry console that accesses
-our models.
+X In your console, run `rake console`. Now we are in a Pry console that accesses our models.
 
 Let's make a few new songs:
 
 ```bash
-[1]pry(main)> hello = Song.new(name: "Hello")
+X [1]pry(main)> hello = Song.new(name: "Hello")
 => #<Song:0x007fc75a8de3d8 id: nil, name: "Hello", artist_id: nil, genre_id: nil>
-[2]pry(main)> hotline_bling = Song.new(name: "Hotline Bling")
+X [2]pry(main)> hotline_bling = Song.new(name: "Hotline Bling")
 => #<Song:0x007fc75b9f3a38 id: nil, name: "Hotline Bling", artist_id: nil, genre_id: nil>
 ```
 
-Okay, here we have two songs. Let's make some artists to associate them to. In
-the *same PRY sessions as above*:
+Okay, here we have two songs. Let's make some artists to associate them to. In the *same PRY sessions as above*:
 
 ```bash
-[3] pry(main)> adele = Artist.new(name: "Adele")
+X [3] pry(main)> adele = Artist.new(name: "Adele")
 => #<Artist:0x007fc75b8d9490 id: nil, name: "Adele">
-[4] pry(main)> drake = Artist.new(name: "Drake")
+X [4] pry(main)> drake = Artist.new(name: "Drake")
 => #<Artist:0x007fc75b163c60 id: nil, name: "Drake">
 ```
 
-So, we know that an individual song has an `artist_id` attribute. We *could*
-associate `hello` to `adele` by setting `hello.artist_id=` equal to the `id` of
-the `adele` object. BUT! Active Record makes it so easy for us. The macros we
-implemented in our classes allow us to associate a song object directly to an
-artist object:
+So, we know that an individual song has an `artist_id` attribute. We *could* associate `hello` to `adele` by setting `hello.artist_id=` equal to the `id` of the `adele` object. BUT! Active Record makes it so easy for us. The macros we
+implemented in our classes allow us to associate a song object directly to an artist object:
 
 ```bash
-[5] pry(main)> hello.artist = adele
+X [5] pry(main)> hello.artist = adele
 => #<Artist:0x007fc75b8d9490 id: nil, name: "Adele">
 ```
 
 Now, we can ask `hello` who its artist is:
 
 ```bash
-[6] pry(main)> hello.artist
+X [6] pry(main)> hello.artist
 => #<Artist:0x007fc75b8d9490 id: nil, name: "Adele">
 ```
 
 We can even chain methods to ask `hello` for the *name* of its artist:
 
 ```bash
-[7] pry(main)> hello.artist.name
+[X 7] pry(main)> hello.artist.name
 => "Adele"
 ```
 
-Wow! This is great, but we're not quite where we want to be. Right now, we've
-been able to assign an artist to a song, but is the reverse true?
+Wow! This is great, but we're not quite where we want to be. Right now, we've been able to assign an artist to a song, but is the reverse true?
 
 ```bash
-[7] pry(main)> adele.songs
+X [7] pry(main)> adele.songs
 => []
 ```
 
-In this case, we still need to tell the `adele` Artist instance which songs
-it has. We can do this by pushing the song instance into `adele.songs`:
+In this case, we still need to tell the `adele` Artist instance which songs it has. We can do this by pushing the song instance into `adele.songs`:
 
 ```bash
-[7] pry(main)> adele.songs.push(hello)
+X [7] pry(main)> adele.songs.push(hello)
 => [#<Song:0x007fc75a8de3d8 id: nil, name: "Hello", artist_id: nil, genre_id: nil>]
 ```
 
-Okay, now both sides of the relationships are updated, but so far all the work
-we've done has been with temporary instances of Artist and Song. To persist
-these relationships, we can use Active Record's `save` functionality:
+Okay, now both sides of the relationships are updated, but so far all the work we've done has been with temporary instances of Artist and Song. To persist these relationships, we can use Active Record's `save` functionality:
 
 ```bash
-[8] pry(main)> adele.save
+X [8] pry(main)> adele.save
 => true
-[9] pry(main)> adele
+X [9] pry(main)> adele
 => #<Artist:0x007fc75b8d9490 id: 1, name: "Adele">
 ```
 
 Notice that `adele` now has an `id`. What about `hello`?
 
 ```bash
-[10] pry(main)> hello
+X [10] pry(main)> hello
 => #<Song:0x007fc75a8de3d8 id: 1, name: "Hello", artist_id: nil, genre_id: nil>
 ```
 
-Whoa! We didn't mention `hello` when we saved. However, we established an
-association by assigning `hello` as a song `adele` _has_. In order for `adele`
-to save, `hello` must also be saved. Thus, `hello` has also been given an `id`.
+Whoa! We didn't mention `hello` when we saved. However, we established an association by assigning `hello` as a song `adele` _has_. In order for `adele` to save, `hello` must also be saved. Thus, `hello` has also been given an `id`.
 
-Go ahead and do the same for `hotline_bling` and `drake` to try it out on your
-own.
+Go ahead and do the same for `hotline_bling` and `drake` to try it out on your own.
 
 ## Adding Additional Associations
 
